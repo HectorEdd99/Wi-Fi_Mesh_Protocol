@@ -1,0 +1,59 @@
+
+# Configure a default setup of Home Assistant (frontend, api, etc)
+default_config:
+
+# Text to speech
+tts:
+  - platform: google_translate
+
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+# Example configuration.yaml entry
+light:
+  - platform: mqtt
+    name: "Office Light"
+    state_topic: "office/light/status"
+    command_topic: "office/light/status"
+    brightness_state_topic: 'office/light/brightness'
+    brightness_command_topic: 'office/light/brightness/set'
+    qos: 0
+    payload_on: "ON"
+    payload_off: "OFF"
+    optimistic: false
+    
+  - platform: mqtt
+    name: "Sensor Ligth"
+    state_topic: "office/sensor/ligth"
+    command_topic: "office/sensor/ligth"
+    brightness_state_topic: 'office/sensor/brightness'
+    brightness_command_topic: 'office/sensor/brightness/set'
+    qos: 0
+    payload_on: "ON"
+    payload_off: "OFF"
+    optimistic: false
+# 
+sensor:
+  - platform: mqtt
+    name: "Temperature"
+    state_topic: "office/sensor/DHT11"
+    unit_of_measurement: "°C"
+    value_template: "{{ value_json.temperature }}"
+  - platform: mqtt
+    name: "Humidity"
+    state_topic: "office/sensor/DHT11"
+    unit_of_measurement: "%"
+    value_template: "{{ value_json.humidity }}"
+
+binary_sensor:
+  - platform: mqtt
+    name: "Sensor Hall"
+    device_class: motion
+    state_topic: "RFBridge/sensor_pir_hall"
+    availability_topic: "office/sensor/motion"
+    payload_available: "motion_detected"
+    payload_not_available: "motion_no_detected"
+    payload_on: "motion_detected"
+    payload_off: "motion_no_detected"
